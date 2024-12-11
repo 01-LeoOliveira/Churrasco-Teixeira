@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Home } from 'lucide-react'
 import { FaWhatsapp } from 'react-icons/fa';
 
 // Interface para os itens do carrinho
@@ -22,6 +22,11 @@ interface PedidoCompleto {
   cliente: {
     nome: string;
     telefone: string;
+    endereco: {
+      rua: string;
+      numero: string;
+      complemento?: string;
+    };
     observacoes?: string;
   };
   pagamento: string;
@@ -46,6 +51,11 @@ function PedidosContent() {
   const [dadosCliente, setDadosCliente] = useState({
     nome: '',
     telefone: '',
+    endereco: {
+      rua: '',
+      numero: '',
+      complemento: ''
+    },
     observacoes: ''
   })
 
@@ -68,9 +78,10 @@ function PedidosContent() {
   }
 
   const gerarMensagemWhatsApp = (pedido: PedidoCompleto) => {
-    let mensagem = `*Novo Pedido - Doce Presente*\n\n`
+    let mensagem = `*Novo Pedido - Churrasco da Esquina*\n\n`
     mensagem += `*Nome:* ${pedido.cliente.nome}\n`
-    mensagem += `*Telefone:* ${pedido.cliente.telefone}\n\n`
+    mensagem += `*Telefone:* ${pedido.cliente.telefone}\n`
+    mensagem += `*Endereço:* ${pedido.cliente.endereco.rua}, ${pedido.cliente.endereco.numero} ${pedido.cliente.endereco.complemento ? `(${pedido.cliente.endereco.complemento})` : ''}\n\n`
 
     mensagem += `*Itens do Pedido:*\n`
     pedido.bolos.forEach((bolo) => {
@@ -115,6 +126,12 @@ function PedidosContent() {
           className="absolute left-0 flex items-center text-white hover:text-yellow-400"
         >
           <ArrowLeft className="mr-2" /> Voltar ao Cardápio
+        </Link>
+        <Link
+          href="/"
+          className="absolute right-0 flex items-center text-white hover:text-yellow-400"
+        >
+          <Home className="mr-2" /> Home
         </Link>
         <h1 className="text-2xl sm:text-3xl font-bold text-center text-black">
           Finalizar Pedido
@@ -178,6 +195,52 @@ function PedidosContent() {
               placeholder="(00) 00000-0000"
             />
           </div>
+          
+          {/* Novos campos de endereço */}
+          <div>
+            <label className="block mb-2 text-black">Rua</label>
+            <input
+              type="text"
+              value={dadosCliente.endereco.rua}
+              onChange={(e) => setDadosCliente({ 
+                ...dadosCliente, 
+                endereco: { ...dadosCliente.endereco, rua: e.target.value } 
+              })}
+              className="w-full border rounded p-2 text-black bg-white focus:ring-2 focus:ring-pink-300"
+              required
+              placeholder="Nome da rua"
+            />
+          </div>
+          <div className="flex space-x-2">
+            <div className="w-1/3">
+              <label className="block mb-2 text-black">Número</label>
+              <input
+                type="text"
+                value={dadosCliente.endereco.numero}
+                onChange={(e) => setDadosCliente({ 
+                  ...dadosCliente, 
+                  endereco: { ...dadosCliente.endereco, numero: e.target.value } 
+                })}
+                className="w-full border rounded p-2 text-black bg-white focus:ring-2 focus:ring-pink-300"
+                required
+                placeholder="Nº"
+              />
+            </div>
+            <div className="w-2/3">
+              <label className="block mb-2 text-black">Complemento (opcional)</label>
+              <input
+                type="text"
+                value={dadosCliente.endereco.complemento}
+                onChange={(e) => setDadosCliente({ 
+                  ...dadosCliente, 
+                  endereco: { ...dadosCliente.endereco, complemento: e.target.value } 
+                })}
+                className="w-full border rounded p-2 text-black bg-white focus:ring-2 focus:ring-pink-300"
+                placeholder="Bloco, apartamento, etc."
+              />
+            </div>
+          </div>
+
           <div>
             <label className="block mb-2 text-black">Método de Pagamento</label>
             <select

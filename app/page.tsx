@@ -19,14 +19,14 @@ export default function Home() {
         <div className="text-center bg-[#fafafa4d] p-6 md:p-10 rounded-2xl shadow-2xl w-full max-w-md text-white border-4 border-[#fcff25]">
           <Image 
             src="/img/profile.png" 
-            alt="Churrasco do Teixeira" 
+            alt="Churrasco da Esquina" 
             width={200} 
             height={200} 
             priority
             className="mx-auto mb-4 md:mb-6 rounded-full w-32 md:w-48 h-32 md:h-48 object-cover border-4 border-[#fafafa]"
           />
           <h1 className="text-3xl md:text-4xl font-bold mb-2 md:mb-4 text-[#fcff25]">
-            Churrasco do Teixeira
+            CHURRASCO DA ESQUINA
           </h1>
           <p className="text-base md:text-xl mb-4 md:mb-8 text-white px-2">
             O sabor da brasa direto para sua mesa!

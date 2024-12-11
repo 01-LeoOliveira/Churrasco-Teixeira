@@ -6,7 +6,7 @@ import espetinhos from '../../data/espetinhos.json'
 import bebidas from '../../data/bebidas.json'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingCart } from 'lucide-react'
+import { ShoppingCart, Home } from 'lucide-react'
 
 interface EspetinhoCarrinho {
   id: number
@@ -31,10 +31,21 @@ function CardapioContent() {
     return []
   })
 
-  const [espetinhosQuantidade, setEspetinhosQuantidade] = useState<{[key: number]: {quantidade: number, tamanho: string}}>({})
-  const [bebidasQuantidade, setBebidasQuantidade] = useState<{[key: number]: {quantidade: number}}>({})
+  // Correção na tipagem do estado inicial
+  const [espetinhosQuantidade, setEspetinhosQuantidade] = useState<{ [key: number]: { quantidade: number, tamanho: 'Simples' | 'Acompanhamento (completo)' } }>(
+    espetinhos.reduce((acc: { [key: number]: { quantidade: number, tamanho: 'Simples' | 'Acompanhamento (completo)' } }, espetinho) => {
+      acc[espetinho.id] = { quantidade: 1, tamanho: 'Simples' };
+      return acc;
+    }, {})
+  )
 
-  const atualizarQuantidadeEspetinho = (espetinhoId: number, quantidade: number, tamanho: string) => {
+  const [bebidasQuantidade, setBebidasQuantidade] = useState<{ [key: number]: { quantidade: number } }>({})
+
+  const atualizarQuantidadeEspetinho = (
+    espetinhoId: number, 
+    quantidade: number, 
+    tamanho: 'Simples' | 'Acompanhamento (completo)'
+  ) => {
     setEspetinhosQuantidade(prev => ({
       ...prev,
       [espetinhoId]: { quantidade, tamanho }
@@ -55,13 +66,13 @@ function CardapioContent() {
       const espetinhoNoCarrinho: EspetinhoCarrinho = {
         id: espetinho.id,
         nome: espetinho.nome,
-        preco: espetinho.preco,
+        preco: espetinho.precos[detalhes.tamanho === 'Simples' ? 'Simples' : 'Acompanhamento'],
         quantidade: detalhes.quantidade,
         tamanho: detalhes.tamanho
       }
 
       const carrinhoAtualizado = [...carrinho]
-      const indiceExistente = carrinhoAtualizado.findIndex(item => 
+      const indiceExistente = carrinhoAtualizado.findIndex(item =>
         item.id === espetinhoNoCarrinho.id && item.tamanho === espetinhoNoCarrinho.tamanho
       )
 
@@ -83,7 +94,7 @@ function CardapioContent() {
       }
 
       const carrinhoAtualizado = [...carrinho]
-      const indiceExistente = carrinhoAtualizado.findIndex(item => 
+      const indiceExistente = carrinhoAtualizado.findIndex(item =>
         item.id === bebidaNoCarrinho.id
       )
 
@@ -100,7 +111,7 @@ function CardapioContent() {
   const valorTotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0)
 
   return (
-    <div 
+    <div
       className="relative min-h-screen w-full bg-cover bg-center bg-fixed"
       style={{
         backgroundImage: 'url("/img/fundo.jpg")',
@@ -109,13 +120,20 @@ function CardapioContent() {
         backgroundAttachment: 'fixed'
       }}
     >
+      {/* Botão de Home */}
+      <Link
+        href="/"
+        className="fixed top-4 left-4 z-50 bg-[#ff6f00] text-white p-3 rounded-full shadow-lg hover:bg-[#ff8f00] flex items-center"
+      >
+        <Home className="w-4 h-4 md:w-6 md:h-6" />
+      </Link>
       {/* Overlay escuro para melhorar a legibilidade e profundidade */}
       <div className="absolute inset-0 bg-black opacity-60"></div>
 
       <div className="relative z-10 container mx-auto px-2 md:px-4 py-4 md:py-8 min-h-screen">
         {/* Botão de Carrinho Flutuante */}
         {carrinho.length > 0 && (
-          <Link 
+          <Link
             href={{
               pathname: '/pedidos',
               query: { carrinho: JSON.stringify(carrinho) }
@@ -134,12 +152,12 @@ function CardapioContent() {
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {espetinhos.map((espetinho) => (
-              <div 
-                key={espetinho.id} 
+              <div
+                key={espetinho.id}
                 className="border rounded-lg overflow-hidden shadow-md bg-[#5d4037]/80 p-3 md:p-4 text-white"
               >
-                <Image 
-                  src={espetinho.imagem} 
+                <Image
+                  src={espetinho.imagem}
                   alt={espetinho.nome}
                   width={400}
                   height={300}
@@ -150,17 +168,24 @@ function CardapioContent() {
                     {espetinho.nome}
                   </h2>
                   <p className="text-sm md:text-base text-white mb-2">{espetinho.descricao}</p>
-                  
+
                   <div className="flex flex-col sm:flex-row justify-between items-center mb-2 space-y-2 sm:space-y-0">
                     <span className="text-base md:text-lg font-bold text-[#e9e2dd]">
-                      R$ {espetinho.preco.toFixed(2)}
+                      R$ {(
+                        espetinho.precos[
+                          espetinhosQuantidade[espetinho.id]?.tamanho === 'Simples' 
+                            ? 'Simples' 
+                            : 'Acompanhamento'
+                        ]
+                      ).toFixed(2)}
                     </span>
-                    <select 
-                      value={(espetinhosQuantidade[espetinho.id]?.tamanho) || 'Simples'}
+                    <select
+                      value={espetinhosQuantidade[espetinho.id]?.tamanho || 'Simples'}
                       onChange={(e) => {
-                        const tamanhoSelecionado = e.target.value
-                        atualizarQuantidadeEspetinho(espetinho.id, 
-                          espetinhosQuantidade[espetinho.id]?.quantidade || 1, 
+                        const tamanhoSelecionado = e.target.value as 'Simples' | 'Acompanhamento (completo)'
+                        atualizarQuantidadeEspetinho(
+                          espetinho.id,
+                          espetinhosQuantidade[espetinho.id]?.quantidade || 1,
                           tamanhoSelecionado
                         )
                       }}
@@ -175,21 +200,21 @@ function CardapioContent() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
-                    <input 
+                    <input
                       type="number"
                       min="1"
                       value={espetinhosQuantidade[espetinho.id]?.quantidade || 1}
                       onChange={(e) => {
                         const quantidade = parseInt(e.target.value)
                         atualizarQuantidadeEspetinho(
-                          espetinho.id, 
-                          quantidade, 
+                          espetinho.id,
+                          quantidade,
                           espetinhosQuantidade[espetinho.id]?.tamanho || 'Simples'
                         )
                       }}
                       className="w-full sm:w-16 border rounded px-2 py-1 text-center text-sm bg-[#4a2c2a] text-white"
                     />
-                    <button 
+                    <button
                       onClick={() => adicionarAoCarrinho(espetinho, 'espetinho')}
                       className="w-full sm:flex-1 bg-[#ff6f00] text-white py-2 rounded hover:bg-[#ff8f00] text-sm"
                     >
@@ -209,12 +234,12 @@ function CardapioContent() {
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {bebidas.map((bebida) => (
-              <div 
-                key={bebida.id} 
+              <div
+                key={bebida.id}
                 className="border rounded-lg overflow-hidden shadow-md bg-[#5d4037]/80 p-3 md:p-4 text-white"
               >
-                <Image 
-                  src={bebida.imagem} 
+                <Image
+                  src={bebida.imagem}
                   alt={bebida.nome}
                   width={400}
                   height={300}
@@ -225,7 +250,7 @@ function CardapioContent() {
                     {bebida.nome}
                   </h2>
                   <p className="text-sm md:text-base text-white mb-2">{bebida.descricao}</p>
-                  
+
                   <div className="flex flex-col sm:flex-row justify-between items-center mb-2 space-y-2 sm:space-y-0">
                     <span className="text-base md:text-lg font-bold text-[#e9e2dd]">
                       R$ {bebida.preco.toFixed(2)}
@@ -233,7 +258,7 @@ function CardapioContent() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
-                    <input 
+                    <input
                       type="number"
                       min="1"
                       value={bebidasQuantidade[bebida.id]?.quantidade || 1}
@@ -243,7 +268,7 @@ function CardapioContent() {
                       }}
                       className="w-full sm:w-16 border rounded px-2 py-1 text-center text-sm bg-[#4a2c2a] text-white"
                     />
-                    <button 
+                    <button
                       onClick={() => adicionarAoCarrinho(bebida, 'bebida')}
                       className="w-full sm:flex-1 bg-[#ff6f00] text-white py-2 rounded hover:bg-[#ff8f00] text-sm"
                     >

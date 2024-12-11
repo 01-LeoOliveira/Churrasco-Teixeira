@@ -8,8 +8,17 @@ const montserrat = Montserrat({
 })
 
 export const metadata: Metadata = {
-  title: 'Churrasco do Teixeira',
-  description: 'Churrascaria Teixiera'
+  title: 'Churrasco da Esquina',
+  description: 'Churrascaria da',
+  icons: {
+    icon: [
+      { url: '/img/profile.png', sizes: '16x16', type: 'image/png' },
+      { url: '/img/profile.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/img/profile.png', sizes: '180x180', type: 'image/png' },
+    ],
+  }
 }
 
 export default function RootLayout({
