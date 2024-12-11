@@ -1,0 +1,24 @@
+[
+    {
+      "id": 1,
+      "nome": "Coca-Cola",
+      "descricao": "Refrigerante tradicional",
+      "preco": 5.00,
+      "imagem": "/img/BEBIDAS/coca.jpg"
+    },
+    {
+      "id": 2,
+      "nome": "Suco de Laranja",
+      "descricao": "Suco de Laranja",
+      "preco": 6.50,
+      "imagem": "/img/BEBIDAS/suco-laranja.jpg"
+    },
+    {
+      "id": 3,
+      "nome": "Suco de Acerola",
+      "descricao": "Suco de Acerola",
+      "preco": 6.50,
+      "imagem": "/img/BEBIDAS/suco-acerola.jpg"
+    }
+    
+  ]

@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "nome": "Espetinho de Frango",
+    "descricao": "Frango marinado em temperos especiais, grelhado na brasa",
+    "preco": 12.00,
+    "tamanhos": ["Simples", "Acompanhamento"],
+    "imagem": "/img/ESPETINHOS/Espetinho-frango.jpg"
+  },
+  {
+    "id": 2,
+    "nome": "Espetinho de Carne Bovina",
+    "descricao": "Corte nobre de carne bovina, suculento e grelhado na brasa",
+    "preco": 15.00,
+    "tamanhos": ["Simples", "Acompanhamento"],
+    "imagem": "/img/ESPETINHOS/Espetinho-de-Carne.jpg"
+  },
+  {
+    "id": 3,
+    "nome": "Espetinho de Linguiça",
+    "descricao": "Linguiça artesanal defumada, grelhada na perfeição",
+    "preco": 10.00,
+    "tamanhos": ["Simples", "Acompanhamento"],
+    "imagem": "/img/ESPETINHOS/Espetinho-linguica.jpg"
+  },
+  {
+    "id": 4,
+    "nome": "Espetinho Misto",
+    "descricao": "Combinação de frango, carne e linguiça em um único espetinho",
+    "preco": 18.00,
+    "tamanhos": ["Simples", "Acompanhamento"],
+    "imagem": "/img/ESPETINHOS/Espetinho-misto.jpg"
+  },
+  {
+    "id": 5,
+    "nome": "Espetinho de Queijo",
+    "descricao": "Queijo coalho grelhado na brasa, dourado e crocante",
+    "preco": 8.00,
+    "tamanhos": ["Simples", "Acompanhamento"],
+    "imagem": "/img/ESPETINHOS/Espetinho-queijo.jpg"
+  },
+  {
+    "id": 6,
+    "nome": "Espetinho de Picanha",
+    "descricao": "Corte nobre de picanha, suculento e grelhado na brasa",
+    "preco": 22.00,
+    "tamanhos": ["Simples", "Acompanhamento"],
+    "imagem": "/img/ESPETINHOS/Espetinho-picanha.jpg"
+  }
+]
